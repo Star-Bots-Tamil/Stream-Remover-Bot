@@ -65,7 +65,7 @@ def data(path, file):
       invalid_message="should be at least 1 selection",
       ).execute()
     
-    selected_streams = inquirer.checkbox(
+    selected_audio = inquirer.checkbox(
       message='Select all Audio tracks you want to keep',
       choices=audio_stream,
       instruction="([\u2191\u2193]: Select Item. [Space]: Toggle Choice), [Enter]: Confirm",
@@ -83,11 +83,15 @@ def data(path, file):
 
 
     for x in selected_subtitles:
-      del subtitles[x]
+      del sub_track[x]
     
-    for x in selected_streams:
-      del tracks[x]
+    for x in selected_audio:
+      del audio_track[x]
 
+    for x in selected_video:
+      del video_track[x]
+      
+    
     return video_track, audio_track, sub_track
   except ffmpeg.Error as e:
     # print(f'stdrr: {e.stderr}\n')
@@ -113,10 +117,12 @@ def main():
   count = 1
   
   for x in enumerate(src_list):
-    video, tracks, subtitles = data(src_path , x[1])
+    videos, tracks, subtitles = data(src_path , x[1])
 
+    print(videos)
     print(tracks)
     print(subtitles)
+    
     audio_map=''.join([f'-map {tracks[stream]} ' for stream in tracks])
     filename = f'{str(x[1])}'
     filename = filename[:-4]
