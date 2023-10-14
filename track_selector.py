@@ -5,12 +5,13 @@ import ffmpeg
 import os
 import subprocess
 import typer
-
+import time
 app = typer.Typer()
 
 def data(path, file):
   try:
     # print(f'File: {file}')
+    start = time.time()
     probe = ffmpeg.probe(os.path.join(path, file))
     video_tracks = [stream for stream in probe['streams'] if stream['codec_type'] == 'video']
     audio_tracks = [stream for stream in probe['streams'] if stream['codec_type'] == 'audio']
@@ -38,7 +39,6 @@ def data(path, file):
         video_track[x] = []
       video_track[x].append(f'0:s:{count}') 
       count+=1
-    print(f'video: {video_track}')
 
     count=0
     for x in audio_stream:
@@ -46,7 +46,6 @@ def data(path, file):
         audio_track[x] = []
       audio_track[x].append(f'0:a:{count}')  
       count += 1
-    print(f'audio: {audio_track}')
     
     count=0
     for x in sub_stream:
@@ -54,8 +53,8 @@ def data(path, file):
         sub_track[x] = []
       sub_track[x].append(f'0:s:{count}') 
       count+=1
-    print(f'subs: {sub_track}')
-    
+    end = time.time()
+    print(end-start)
 
     selected_video = inquirer.checkbox(
       message='Select all Video tracks you want to keep',
@@ -82,14 +81,20 @@ def data(path, file):
       ).execute()
 
 
-    for x in selected_subtitles:
-      del sub_track[x]
+    for x in selected_video:
+      print(f'video track: {video_track}')
+      print(f'selected video: {x}')
+      # del video_track[x]
     
     for x in selected_audio:
-      del audio_track[x]
+      print(f'audio track: {audio_track}')
+      print(f'selected audio: {x}')
+      # del audio_track[x]
 
-    for x in selected_video:
-      del video_track[x]
+    for x in selected_subtitles:
+      print(f'subtitle track: {sub_track}')
+      print(f'selected subtitles: {x}')
+      # del sub_track[x]
       
     
     return video_track, audio_track, sub_track
@@ -119,9 +124,9 @@ def main():
   for x in enumerate(src_list):
     videos, tracks, subtitles = data(src_path , x[1])
 
-    print(videos)
-    print(tracks)
-    print(subtitles)
+    # print(videos)
+    # print(tracks)
+    # print(subtitles)
     
     audio_map=''.join([f'-map {tracks[stream]} ' for stream in tracks])
     filename = f'{str(x[1])}'
@@ -129,9 +134,9 @@ def main():
     output_file = os.path.join(f'{src_path}', f'{filename}-eng.mkv')
     ep_path = os.path.join(src_path, x[1])
 
-    command = f'''ffmpeg -i "{ep_path}" -map 0 {audio_map}-map 0:s:0 -c copy "{output_file}"'''
-    subprocess.run(command)
-    print(command)
+    # command = f'''ffmpeg -i "{ep_path}" -map 0 {audio_map}-map 0:s:0 -c copy "{output_file}"'''
+    # subprocess.run(command)
+    # print(command)
 
     count += 1
 
