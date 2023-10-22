@@ -1,17 +1,7 @@
-aioconsole==0.6.2
 av==10.0.0
-click==8.1.7
-colorama==0.4.6
 ffmpeg-python==0.2.0
 future==0.18.3
 inquirerpy==0.3.4
-markdown-it-py==3.0.0
-mdurl==0.1.2
 pfzy==0.3.4
 prompt-toolkit==3.0.39
-Pygments==2.16.1
-rich==13.6.0
-shellingham==1.5.3
-typer==0.9.0
-typing_extensions==4.8.0
 wcwidth==0.2.8
