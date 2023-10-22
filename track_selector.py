@@ -1,15 +1,9 @@
 from InquirerPy import inquirer
-from InquirerPy.base.control import Choice
 from InquirerPy.validator import PathValidator
-from aioconsole import ainput
-import random
-import string
 import ffmpeg
-import typer
 import time
 import av
 import os
-app = typer.Typer()
 
 def data(path, file):
   start = time.time()
